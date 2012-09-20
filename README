@@ -1,0 +1,5 @@
+Triton is C# class library I personally often use to add functionallity I regurarly use.
+
+A project that requires the Triton library is SimTelemetry:
+
+https://github.com/nlhans/SimTelemetry
