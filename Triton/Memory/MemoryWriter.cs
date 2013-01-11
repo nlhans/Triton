@@ -4,42 +4,119 @@ namespace Triton.Memory
 {
     public class MemoryWriter : MemoryReader
     {
-        public void OpenProcess()
+        public override bool Open()
         {
             m_hProcess = ProcessMemoryReaderApi.OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_READ, 0, (uint)m_ReadProcess.Id);
-
-            if (m_hProcess == IntPtr.Zero)
-            {
-                Console.WriteLine(ProcessMemoryReaderApi.GetLastError());
-            }
+            return m_hProcess != IntPtr.Zero;
         }
 
+        #region Write<IntPtr>
         public void WriteFloat(IntPtr address, float value)
         {
-            this.WriteProcessMemory(address, BitConverter.GetBytes(value));
+            Write(address, BitConverter.GetBytes(value));
         }
 
         public void WriteDouble(IntPtr address, double value)
         {
-            this.WriteProcessMemory(address, BitConverter.GetBytes(value));
+            Write(address, BitConverter.GetBytes(value));
         }
 
         public void WriteByte(IntPtr address, byte value)
         {
-            this.WriteProcessMemory(address, new byte[1] { value });
+            Write(address, new byte[1] { value });
         }
 
-
-        private void WriteProcessMemory(IntPtr address, byte[] bits)
+        public void WriteBytes(IntPtr address, byte[] value)
         {
-            //Trying to write to the process's memory.
-            int BytesWritten;
-            IntPtr BaseAddress = new IntPtr(0x49C523);
-            byte[] NewVal = { 0x90 };
-            ProcessMemoryReaderApi.WriteProcessMemory(m_hProcess, address, bits, (UIntPtr)bits.Length, out BytesWritten);
+            Write(address, value);
+        }
 
-            if (BytesWritten == 0)
-                Console.WriteLine("Failed to write ({0})", ProcessMemoryReaderApi.GetLastError());
+        public void WriteInt16(IntPtr address, short value)
+        {
+            Write(address, BitConverter.GetBytes(value));
+        }
+
+        public void WriteInt32(IntPtr address, int value)
+        {
+            Write(address, BitConverter.GetBytes(value));
+        }
+
+        public void WriteInt64(IntPtr address, long value)
+        {
+            Write(address, BitConverter.GetBytes(value));
+        }
+
+        public void WriteUInt16(IntPtr address, ushort value)
+        {
+            Write(address, BitConverter.GetBytes(value));
+        }
+
+        public void WriteUInt32(IntPtr address, uint value)
+        {
+            Write(address, BitConverter.GetBytes(value));
+        }
+
+        public void WriteUInt64(IntPtr address, ulong value)
+        {
+            Write(address, BitConverter.GetBytes(value));
+        }
+        #endregion
+        #region Write<Int>
+
+        public void WriteFloat(int address, float value)
+        {
+            Write((IntPtr)address, BitConverter.GetBytes(value));
+        }
+
+        public void WriteDouble(int address, double value)
+        {
+            Write((IntPtr)address, BitConverter.GetBytes(value));
+        }
+
+        public void WriteByte(int address, byte value)
+        {
+            Write((IntPtr)address, new byte[1] { value });
+        }
+
+        public void WriteBytes(int address, byte[] value)
+        {
+            Write((IntPtr)address, value);
+        }
+
+        public void WriteInt16(int address, short value)
+        {
+            Write((IntPtr)address, BitConverter.GetBytes(value));
+        }
+
+        public void WriteInt32(int address, int value)
+        {
+            Write((IntPtr)address, BitConverter.GetBytes(value));
+        }
+
+        public void WriteInt64(int address, long value)
+        {
+            Write((IntPtr)address, BitConverter.GetBytes(value));
+        }
+
+        public void WriteUInt16(int address, ushort value)
+        {
+            Write((IntPtr)address, BitConverter.GetBytes(value));
+        }
+
+        public void WriteUInt32(int address, uint value)
+        {
+            Write((IntPtr)address, BitConverter.GetBytes(value));
+        }
+
+        public void WriteUInt64(int address, ulong value)
+        {
+            Write((IntPtr)address, BitConverter.GetBytes(value));
+        }
+        #endregion
+        protected void Write(IntPtr address, byte[] data)
+        {
+            int bytesWritten;
+            ProcessMemoryReaderApi.WriteProcessMemory(m_hProcess, address, data, (UIntPtr)data.Length, out bytesWritten);
         }
     }
 }
